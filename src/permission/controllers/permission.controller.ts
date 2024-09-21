@@ -8,8 +8,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Permission } from '@/permission/permissions.decorator';
-import { PermissionService } from '@permission/permission.service';
+import { Permission } from '@permission/decorators/permissions.decorator';
+import { PermissionService } from '@permission/services/permission.service';
 import { UpdatePermissionDto } from '@permission/dto/update-permission.dto';
 import { CreatePermissionDto } from '@permission/dto/create-permission.dto';
 

@@ -9,6 +9,6 @@ export class CreatePermissionDto {
   @IsNotEmpty()
   description: string;
 
-  @IsNotEmpty()
-  role: string[];
+  @IsOptional()
+  roleIds: string[];
 }

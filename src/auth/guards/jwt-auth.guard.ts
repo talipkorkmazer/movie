@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_KEY } from '@/auth/auth.meta';
-import { UserModel } from '@/auth/auth.model';
+import { IS_PUBLIC_KEY } from '@auth/metas/auth.meta';
+import { UserModel } from '@auth/models/auth.model';
 import { Request } from 'express';
 
 @Injectable()

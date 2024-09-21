@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { PREDEFINED_ROLES } from '@auth/models/auth.model';
 
 export class RegisterDto {
   @ApiProperty()
@@ -17,8 +18,8 @@ export class RegisterDto {
   @IsNotEmpty()
   age: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: PREDEFINED_ROLES, required: false })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   roleId: string;
 }
