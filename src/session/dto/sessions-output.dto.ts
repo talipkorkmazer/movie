@@ -3,7 +3,29 @@ import { IsDate, IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TimeSlots } from '@session/dto/create-session.dto';
 
-export class Sessions {
+export class Movie {
+  @ApiProperty()
+  @IsString()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsNumber()
+  ageRestriction: number;
+
+  @ApiProperty()
+  @IsDate()
+  updatedAt: Date;
+
+  @ApiProperty()
+  @IsDate()
+  createdAt: Date;
+}
+
+export class SessionsOutputDto {
   @ApiProperty()
   @IsString()
   id: string;
@@ -32,30 +54,8 @@ export class Sessions {
   @ApiProperty()
   @IsDate()
   createdAt: Date;
-}
 
-export class MoviesOutputDto {
-  @ApiProperty()
-  @IsString()
-  id: string;
-
-  @ApiProperty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsNumber()
-  ageRestriction: number;
-
-  @ApiProperty()
-  @IsDate()
-  updatedAt: Date;
-
-  @ApiProperty()
-  @IsDate()
-  createdAt: Date;
-
-  @ApiProperty({ type: [Sessions] })
-  @Type(() => Sessions)
-  Sessions: Sessions[];
+  @ApiProperty({ type: [Movie] })
+  @Type(() => Movie)
+  Movie: Movie;
 }

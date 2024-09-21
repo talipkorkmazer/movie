@@ -20,8 +20,10 @@
     "paths": {
       "@/*": ["src/*"],
       "@auth/*": ["src/auth/*"],
+      "@movie/*": ["src/movie/*"],
       "@permission/*": ["src/permission/*"],
-      "@role/*": ["src/role/*"]
+      "@role/*": ["src/role/*"],
+      "@session/*": ["src/session/*"],
     }
   }
 }

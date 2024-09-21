@@ -21,13 +21,13 @@ import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-res
 import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
 import { Permission } from '@permission/decorators/permissions.decorator';
 import { PaginationDto } from '@/common/dto/pagination.dto';
-import { MovieService } from '@/movie/services/movie.service';
-import { CreateMovieDto } from '@/movie/dto/create-movie.dto';
-import { MovieOutputDto } from '@/movie/dto/movie-output.dto';
-import { UpdateMovieDto } from '@/movie/dto/update-movie.dto';
-import { MovieNotfoundResponseType } from '@/movie/types/movie-notfound-response.type';
+import { MovieService } from '@movie/services/movie.service';
+import { CreateMovieDto } from '@movie/dto/create-movie.dto';
+import { MovieOutputDto } from '@movie/dto/movie-output.dto';
+import { UpdateMovieDto } from '@movie/dto/update-movie.dto';
+import { MovieNotfoundResponseType } from '@movie/types/movie-notfound-response.type';
 import { ApiPaginatedResponse } from '@/common/decorators/api-paginated-response.decorator';
-import { MoviesOutputDto } from '@/movie/dto/movies-output.dto';
+import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 
 @ApiTags('Movies')

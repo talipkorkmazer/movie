@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PaginationDto } from '@/common/dto/pagination.dto';
-import { CreateMovieDto } from '@/movie/dto/create-movie.dto';
-import { UpdateMovieDto } from '@/movie/dto/update-movie.dto';
+import { CreateMovieDto } from '@movie/dto/create-movie.dto';
+import { UpdateMovieDto } from '@movie/dto/update-movie.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { createPaginator } from '@/common/pagination.helper';
 import { PaginatedResult } from '@/common/types/paginated-result';
-import { MoviesOutputDto } from '@/movie/dto/movies-output.dto';
-import { MovieOutputDto } from '@/movie/dto/movie-output.dto';
+import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
+import { MovieOutputDto } from '@movie/dto/movie-output.dto';
 
 @Injectable()
 export class MovieService {
