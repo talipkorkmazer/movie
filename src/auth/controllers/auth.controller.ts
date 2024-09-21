@@ -1,6 +1,7 @@
 import {
   Body,
-  Controller, Get,
+  Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -19,8 +20,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { LoginSuccessResponseType } from '@auth/types/login-success-response.type';
-import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
-import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
 import { RegisterDto } from '@auth/dto/register.dto';
 import { RegisterBadRequestResponseType } from '@auth/types/register-bad-request-response.type';
 import { RegisterSuccessResponseType } from '@auth/types/register-success-response.type';
