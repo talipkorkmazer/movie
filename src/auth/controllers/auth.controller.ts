@@ -12,7 +12,6 @@ import { LocalAuthGuard } from '@auth/guards/local-auth.guard';
 import { AuthService } from '@auth/services/auth.service';
 import { Public } from '@auth/metas/auth.meta';
 import {
-  ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
   ApiOkResponse,
@@ -21,17 +20,18 @@ import {
 } from '@nestjs/swagger';
 import { LoginSuccessResponseType } from '@auth/types/login-success-response.type';
 import { RegisterDto } from '@auth/dto/register.dto';
-import { RegisterBadRequestResponseType } from '@auth/types/register-bad-request-response.type';
 import { RegisterSuccessResponseType } from '@auth/types/register-success-response.type';
 import { RegisterConflictResponseType } from '@auth/types/register-conflict-response.type';
 import { LoginDto } from '@auth/dto/login.dto';
 import { UserModel } from '@auth/models/auth.model';
+import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
+import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
 
 @ApiTags('Auth')
-@ApiBadRequestResponse({
-  status: 401,
+@ApiUnauthorizedResponse({
+  status: HttpStatus.UNAUTHORIZED,
   description: 'Unauthorized',
-  type: RegisterBadRequestResponseType,
+  type: LoginUnauthorizedResponseType,
 })
 @Controller('auth')
 export class AuthController {
@@ -54,7 +54,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Register' })
   @ApiConflictResponse({
-    status: 409,
+    status: HttpStatus.CONFLICT,
     description: 'Conflict',
     type: RegisterConflictResponseType,
   })

@@ -84,7 +84,7 @@ export class RoleController {
     status: HttpStatus.NOT_FOUND,
   })
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Permission('delete:role')
   remove(@Param('id') id: string): Promise<void> {
     return this.roleService.remove(id);

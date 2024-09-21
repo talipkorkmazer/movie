@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { HttpStatus } from '@nestjs/common';
 
 export class RegisterConflictResponseType {
   @ApiProperty({ example: 'Username already exists' })
@@ -7,6 +8,6 @@ export class RegisterConflictResponseType {
   @ApiProperty({ example: 'Conflict' })
   error: string;
 
-  @ApiProperty({ example: 409 })
+  @ApiProperty({ example: HttpStatus.CONFLICT })
   statusCode: number;
 }
