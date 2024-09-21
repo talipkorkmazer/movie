@@ -10,7 +10,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
-const TimeSlots = [
+export const TimeSlots = [
   '10:00-12:00',
   '12:00-14:00',
   '14:00-16:00',

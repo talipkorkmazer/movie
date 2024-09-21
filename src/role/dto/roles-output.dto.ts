@@ -2,29 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class RolesOutputDto {
-  @ApiProperty()
-  @IsString()
-  id: string;
-
-  @ApiProperty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsDate()
-  updatedAt: Date;
-
-  @ApiProperty()
-  @IsDate()
-  createdAt: Date;
-
-  @ApiProperty()
-  @ValidateNested({ each: true })
-  @Type(() => Permission)
-  Permissions: Permission[];
-}
-
 export class Permission {
   @ApiProperty()
   @IsString()
@@ -45,4 +22,27 @@ export class Permission {
   @ApiProperty()
   @IsDate()
   createdAt: Date;
+}
+
+export class RolesOutputDto {
+  @ApiProperty()
+  @IsString()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsDate()
+  updatedAt: Date;
+
+  @ApiProperty()
+  @IsDate()
+  createdAt: Date;
+
+  @ApiProperty({ type: [Permission] })
+  @ValidateNested({ each: true })
+  @Type(() => Permission)
+  Permissions: Permission[];
 }
