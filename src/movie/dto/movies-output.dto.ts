@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsDate, IsNumber, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
-export class RolesOutputDto {
+export class MoviesOutputDto {
   @ApiProperty()
   @IsString()
   id: string;
@@ -10,6 +10,10 @@ export class RolesOutputDto {
   @ApiProperty()
   @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsNumber()
+  ageRestriction: number;
 
   @ApiProperty()
   @IsDate()
@@ -20,23 +24,26 @@ export class RolesOutputDto {
   createdAt: Date;
 
   @ApiProperty()
-  @ValidateNested({ each: true })
-  @Type(() => Permission)
-  Permissions: Permission[];
+  @Type(() => Sessions)
+  Sessions: Sessions[];
 }
 
-export class Permission {
+export class Sessions {
   @ApiProperty()
   @IsString()
   id: string;
 
   @ApiProperty()
-  @IsString()
-  name: string;
+  @IsDate()
+  date: Date;
 
   @ApiProperty()
   @IsString()
-  description: string;
+  timeSlot: string;
+
+  @ApiProperty()
+  @IsNumber()
+  roomNumber: number;
 
   @ApiProperty()
   @IsDate()

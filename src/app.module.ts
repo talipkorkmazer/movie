@@ -4,6 +4,7 @@ import { PrismaModule } from '@/prisma/prisma.module';
 import { AuthModule } from '@auth/auth.module';
 import { RoleModule } from '@role/role.module';
 import { PermissionModule } from '@permission/permission.module';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PermissionModule } from '@permission/permission.module';
     AuthModule,
     RoleModule,
     PermissionModule,
+    MovieModule,
   ],
   controllers: [],
   providers: [],

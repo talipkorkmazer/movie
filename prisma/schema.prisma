@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  age       Int
-  roleId    String
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  Role      Role?    @relation(fields: [roleId], references: [id])
+  id           String         @id @default(uuid())
+  username     String         @unique
+  password     String
+  age          Int
+  roleId       String
+  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime       @default(now())
+  Role         Role?          @relation(fields: [roleId], references: [id])
+  Ticket       Ticket[]
+  WatchHistory WatchHistory[]
 }
 
 model Role {
@@ -51,4 +53,49 @@ model RolePermission {
   updatedAt    DateTime   @updatedAt
 
   @@id([roleId, permissionId])
+}
+
+model Movie {
+  id             String         @id @default(uuid())
+  name           String         @unique
+  ageRestriction Int
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  Sessions       Session[]
+  WatchHistory   WatchHistory[]
+}
+
+model Session {
+  id           String         @id @default(uuid())
+  movieId      String
+  date         DateTime
+  timeSlot     String
+  roomNumber   Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Tickets      Ticket[]
+  Movie        Movie          @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  WatchHistory WatchHistory[]
+
+  @@unique([movieId, date, timeSlot, roomNumber])
+}
+
+model Ticket {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  session      Session  @relation(fields: [sessionId], references: [id])
+  sessionId    String
+  purchaseDate DateTime @default(now())
+}
+
+model WatchHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  movieId   String
+  sessionId String
+  watchedAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
+  Movie     Movie    @relation(fields: [movieId], references: [id])
+  Session   Session  @relation(fields: [sessionId], references: [id])
 }
