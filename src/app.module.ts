@@ -6,6 +6,7 @@ import { RoleModule } from '@role/role.module';
 import { PermissionModule } from '@permission/permission.module';
 import { MovieModule } from './movie/movie.module';
 import { SessionModule } from './session/session.module';
+import { TicketModule } from './ticket/ticket.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SessionModule } from './session/session.module';
     PermissionModule,
     MovieModule,
     SessionModule,
+    TicketModule,
   ],
   controllers: [],
   providers: [],

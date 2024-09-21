@@ -40,12 +40,9 @@ export class PermissionService {
   async create(
     createPermissionDto: CreatePermissionDto,
   ): Promise<PermissionOutputDto> {
-    const permissionExists = await this.prisma.permission.findFirst({
+    const permissionExists = await this.prisma.permission.count({
       where: {
         name: createPermissionDto.name,
-      },
-      select: {
-        id: true,
       },
     });
     if (permissionExists) {

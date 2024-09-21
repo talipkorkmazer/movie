@@ -72,12 +72,9 @@ export class RoleService {
   async create(createRoleDto: CreateRoleDto): Promise<RoleOutputDto> {
     const { name, permissionIds } = createRoleDto;
     // check of role already exists
-    const roleExists = await this.prisma.role.findFirst({
+    const roleExists = await this.prisma.role.count({
       where: {
         name,
-      },
-      select: {
-        id: true,
       },
     });
     if (roleExists) {

@@ -24,6 +24,7 @@
       "@permission/*": ["src/permission/*"],
       "@role/*": ["src/role/*"],
       "@session/*": ["src/session/*"],
+      "@ticket/*": ["src/ticket/*"],
     }
   }
 }

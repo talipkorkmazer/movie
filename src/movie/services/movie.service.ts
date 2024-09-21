@@ -44,12 +44,9 @@ export class MovieService {
   }
 
   async create(createMovieDto: CreateMovieDto) {
-    const movieExists = await this.prisma.movie.findFirst({
+    const movieExists = await this.prisma.movie.count({
       where: {
         name: createMovieDto.name,
-      },
-      select: {
-        id: true,
       },
     });
     if (movieExists) {
@@ -79,12 +76,9 @@ export class MovieService {
     id: string,
     updateMovieDto: UpdateMovieDto,
   ): Promise<MovieOutputDto> {
-    const movieExists = await this.prisma.movie.findFirst({
+    const movieExists = await this.prisma.movie.count({
       where: {
         id: id,
-      },
-      select: {
-        id: true,
       },
     });
 

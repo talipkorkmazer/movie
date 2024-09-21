@@ -116,12 +116,12 @@ export const permissions = [
   {
     name: 'view:sessions',
     description: 'View all sessions',
-    roles: [PREDEFINED_ROLES.MANAGER],
+    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
   },
   {
     name: 'view:session',
     description: 'View a session',
-    roles: [PREDEFINED_ROLES.MANAGER],
+    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
   },
   {
     name: 'create:session',
@@ -153,29 +153,19 @@ export const permissions = [
   {
     name: 'create:ticket',
     description: 'Create a ticket',
-    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
-  },
-  {
-    name: 'update:ticket',
-    description: 'Update a ticket',
-    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
-  },
-  {
-    name: 'delete:ticket',
-    description: 'Delete a ticket',
-    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
+    roles: [PREDEFINED_ROLES.CUSTOMER],
   },
 
   // Watch History Permissions
   {
     name: 'view:watch-history',
     description: 'View all watch history',
-    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
+    roles: [PREDEFINED_ROLES.CUSTOMER],
   },
   {
     name: 'view:watch-history-entry',
     description: 'View a specific watch history entry',
-    roles: [PREDEFINED_ROLES.MANAGER, PREDEFINED_ROLES.CUSTOMER],
+    roles: [PREDEFINED_ROLES.CUSTOMER],
   },
 ];
 

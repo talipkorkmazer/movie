@@ -44,15 +44,12 @@ export class SessionService {
   }
 
   async create(createSessionDto: CreateSessionDto) {
-    const sessionExists = await this.prisma.session.findFirst({
+    const sessionExists = await this.prisma.session.count({
       where: {
         movieId: createSessionDto.movieId,
         date: createSessionDto.date,
         timeSlot: createSessionDto.timeSlot,
         roomNumber: createSessionDto.roomNumber,
-      },
-      select: {
-        id: true,
       },
     });
 
@@ -74,12 +71,9 @@ export class SessionService {
     id: string,
     updateSessionDto: UpdateSessionDto,
   ): Promise<SessionOutputDto> {
-    const sessionExists = await this.prisma.session.findFirst({
+    const sessionExists = await this.prisma.session.count({
       where: {
         id: id,
-      },
-      select: {
-        id: true,
       },
     });
 
