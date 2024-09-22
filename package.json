@@ -80,7 +80,16 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1",
+      "^@auth/(.*)$": "<rootDir>/auth/$1",
+      "^@movie/(.*)$": "<rootDir>/movie/$1",
+      "^@permission/(.*)$": "<rootDir>/permission/$1",
+      "^@role/(.*)$": "<rootDir>/role/$1",
+      "^@session/(.*)$": "<rootDir>/session/$1",
+      "^@ticket/(.*)$": "<rootDir>/ticket/$1"
+    }
   },
   "prisma": {
     "seed": "ts-node prisma/seed.prisma.ts"

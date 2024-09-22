@@ -53,23 +53,12 @@ export class MovieService {
       throw new ConflictException('Movie already exists');
     }
 
-    const movie = await this.prisma.movie.create({
+    return this.prisma.movie.create({
       data: {
         name: createMovieDto.name,
         ageRestriction: createMovieDto.ageRestriction,
       },
     });
-
-    if (createMovieDto.sessions && createMovieDto.sessions.length > 0) {
-      await this.prisma.session.createMany({
-        data: createMovieDto.sessions.map(session => ({
-          movieId: movie.id,
-          ...session,
-        })),
-      });
-    }
-
-    return movie;
   }
 
   async update(
@@ -86,7 +75,7 @@ export class MovieService {
       throw new NotFoundException('Movie not found');
     }
 
-    const movie = await this.prisma.movie.update({
+    return this.prisma.movie.update({
       where: {
         id: id,
       },
@@ -95,18 +84,6 @@ export class MovieService {
         ageRestriction: updateMovieDto.ageRestriction,
       },
     });
-
-    if (updateMovieDto.sessions && updateMovieDto.sessions.length > 0) {
-      await this.prisma.session.createMany({
-        data: updateMovieDto.sessions.map(session => ({
-          movieId: movie.id,
-          ...session,
-        })),
-        skipDuplicates: true,
-      });
-    }
-
-    return movie;
   }
 
   async remove(id: string) {
