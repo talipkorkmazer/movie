@@ -138,25 +138,40 @@ describe('PermissionService', () => {
         name: 'Updated Permission',
         roleIds: ['role1', 'role2'],
       };
-      const updatedPermission = { id: '1', ...updatePermissionDto };
 
+      const permissionId = 'permission1';
+      const updatedPermission = {
+        id: permissionId,
+        name: updatePermissionDto.name,
+      };
+
+      // Simulate permission exists with ID and name does not exist
+      (prisma.permission.count as jest.Mock).mockResolvedValueOnce(1); // Permission with ID exists
+      (prisma.permission.count as jest.Mock).mockResolvedValueOnce(0); // No conflict with name
+
+      // Simulate successful update
       (prisma.permission.update as jest.Mock).mockResolvedValue(
         updatedPermission,
       );
-      (prisma.rolePermission.createMany as jest.Mock).mockResolvedValue({
-        count: 2,
-      });
 
-      const result = await service.update('1', updatePermissionDto);
+      const result = await service.update(permissionId, updatePermissionDto);
       expect(result).toEqual(updatedPermission);
+      expect(prisma.permission.count).toHaveBeenNthCalledWith(1, {
+        where: { id: permissionId },
+      });
+      expect(prisma.permission.count).toHaveBeenNthCalledWith(2, {
+        where: { name: updatePermissionDto.name },
+      });
       expect(prisma.permission.update).toHaveBeenCalledWith({
-        where: { id: '1' },
+        where: { id: permissionId },
         data: updatePermissionDto,
       });
+
+      // Check if role permissions are updated
       expect(prisma.rolePermission.createMany).toHaveBeenCalledWith({
         data: [
-          { roleId: 'role1', permissionId: updatedPermission.id },
-          { roleId: 'role2', permissionId: updatedPermission.id },
+          { roleId: 'role1', permissionId: permissionId },
+          { roleId: 'role2', permissionId: permissionId },
         ],
         skipDuplicates: true,
       });
@@ -165,16 +180,41 @@ describe('PermissionService', () => {
     it('should throw NotFoundException if permission not found', async () => {
       const updatePermissionDto: UpdatePermissionDto = {
         name: 'Updated Permission',
-        roleIds: [],
       };
+      const permissionId = 'permission1';
 
-      (prisma.permission.update as jest.Mock).mockRejectedValue(
-        new NotFoundException(),
-      );
+      // Simulate permission with ID does not exist
+      (prisma.permission.count as jest.Mock).mockResolvedValueOnce(0); // No permission with this ID
 
       await expect(
-        service.update('nonexistent-id', updatePermissionDto),
+        service.update(permissionId, updatePermissionDto),
       ).rejects.toThrow(NotFoundException);
+      expect(prisma.permission.count).toHaveBeenCalledWith({
+        where: { id: permissionId },
+      });
+      expect(prisma.permission.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw ConflictException if permission name already exists', async () => {
+      const updatePermissionDto: UpdatePermissionDto = {
+        name: 'Existing Permission',
+      };
+      const permissionId = 'permission1';
+
+      // Simulate permission with ID exists and name already exists
+      (prisma.permission.count as jest.Mock).mockResolvedValueOnce(1); // Permission with ID exists
+      (prisma.permission.count as jest.Mock).mockResolvedValueOnce(1); // Permission with name exists
+
+      await expect(
+        service.update(permissionId, updatePermissionDto),
+      ).rejects.toThrow(ConflictException);
+      expect(prisma.permission.count).toHaveBeenNthCalledWith(1, {
+        where: { id: permissionId },
+      });
+      expect(prisma.permission.count).toHaveBeenNthCalledWith(2, {
+        where: { name: updatePermissionDto.name },
+      });
+      expect(prisma.permission.update).not.toHaveBeenCalled();
     });
   });
 
