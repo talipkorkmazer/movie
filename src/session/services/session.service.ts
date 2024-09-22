@@ -17,22 +17,27 @@ export class SessionService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(
+    movieId: string,
     paginationDto: PaginationDto,
   ): Promise<PaginatedResult<SessionsOutputDto>> {
     const paginate = createPaginator(paginationDto);
-    const include = {
+    const includeAndWhere = {
       include: {
         Movie: true,
       },
+      where: {
+        movieId,
+      },
     };
 
-    return await paginate(this.prisma.session, include);
+    return await paginate(this.prisma.session, includeAndWhere);
   }
 
-  async find(id: string) {
+  async find(movieId: string, sessionId: string): Promise<SessionOutputDto> {
     const session = this.prisma.session.findFirst({
       where: {
-        id: id,
+        id: sessionId,
+        movieId,
       },
     });
 
@@ -43,10 +48,10 @@ export class SessionService {
     return session;
   }
 
-  async create(createSessionDto: CreateSessionDto) {
+  async create(movieId: string, createSessionDto: CreateSessionDto) {
     const sessionExists = await this.prisma.session.count({
       where: {
-        movieId: createSessionDto.movieId,
+        movieId: movieId,
         date: createSessionDto.date,
         timeSlot: createSessionDto.timeSlot,
         roomNumber: createSessionDto.roomNumber,
@@ -59,7 +64,7 @@ export class SessionService {
 
     return this.prisma.session.create({
       data: {
-        movieId: createSessionDto.movieId,
+        movieId: movieId,
         date: createSessionDto.date,
         timeSlot: createSessionDto.timeSlot,
         roomNumber: createSessionDto.roomNumber,
@@ -68,12 +73,14 @@ export class SessionService {
   }
 
   async update(
-    id: string,
+    movieId: string,
+    sessionId: string,
     updateSessionDto: UpdateSessionDto,
   ): Promise<SessionOutputDto> {
     const sessionExists = await this.prisma.session.count({
       where: {
-        id: id,
+        id: sessionId,
+        movieId,
       },
     });
 
@@ -83,7 +90,7 @@ export class SessionService {
 
     return this.prisma.session.update({
       where: {
-        id: id,
+        id: sessionId,
       },
       data: {
         date: updateSessionDto.date,
@@ -93,10 +100,10 @@ export class SessionService {
     });
   }
 
-  async remove(id: string) {
+  async remove(movieId: string, sessionId: string) {
     try {
       await this.prisma.session.delete({
-        where: { id },
+        where: { id: sessionId, movieId },
       });
     } catch (e) {
       console.log(e);

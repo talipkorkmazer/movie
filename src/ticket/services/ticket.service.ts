@@ -9,7 +9,6 @@ import { PaginationDto } from '@/common/dto/pagination.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { createPaginator } from '@/common/pagination.helper';
 import { TicketOutputDto } from '@ticket/dto/ticket-output.dto';
-import { CreateTicketDto } from '@ticket/dto/create-ticket.dto';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { UserModel } from '@auth/models/auth.model';
@@ -22,10 +21,19 @@ export class TicketService {
   ) {}
 
   async findAll(
+    movieId: string,
+    sessionId: string,
     paginationDto: PaginationDto,
   ): Promise<PaginatedResult<TicketOutputDto>> {
+    await this.checkMovieAndSessionExistence(movieId, sessionId);
+
+    const { id } = this.getCurrentUser();
     const paginate = createPaginator(paginationDto);
     const select = {
+      where: {
+        sessionId,
+        userId: id,
+      },
       select: {
         id: true,
         purchaseDate: true,
@@ -61,10 +69,18 @@ export class TicketService {
     return await paginate(this.prisma.ticket, select);
   }
 
-  async find(id: string): Promise<TicketOutputDto> {
+  async find(
+    movieId: string,
+    sessionId: string,
+    ticketId: string,
+  ): Promise<TicketOutputDto> {
+    await this.checkMovieAndSessionExistence(movieId, sessionId);
+
+    const { id } = this.getCurrentUser();
     const ticket = this.prisma.ticket.findFirst({
       where: {
-        id: id,
+        id: ticketId,
+        userId: id,
       },
       select: {
         id: true,
@@ -105,11 +121,14 @@ export class TicketService {
     return ticket;
   }
 
-  async create(createTicketDto: CreateTicketDto): Promise<TicketOutputDto> {
+  async create(movieId: string, sessionId: string): Promise<TicketOutputDto> {
+    await this.checkMovieAndSessionExistence(movieId, sessionId);
+
+    const { id } = this.getCurrentUser();
     return this.prisma.ticket.create({
       data: {
-        userId: this.getCurrentUser().id,
-        sessionId: createTicketDto.sessionId,
+        userId: id,
+        sessionId: sessionId,
       },
       select: {
         id: true,
@@ -150,5 +169,26 @@ export class TicketService {
     }
 
     return this.request.user as UserModel;
+  }
+
+  private async checkMovieAndSessionExistence(
+    movieId: string,
+    sessionId: string,
+  ) {
+    const isMovieExists = await this.prisma.movie.count({
+      where: { id: movieId },
+    });
+
+    if (!isMovieExists) {
+      throw new NotFoundException('Movie not found');
+    }
+
+    const isSessionExists = await this.prisma.session.count({
+      where: { id: sessionId },
+    });
+
+    if (!isSessionExists) {
+      throw new NotFoundException('Session not found');
+    }
   }
 }

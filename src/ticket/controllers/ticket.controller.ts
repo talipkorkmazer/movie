@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpStatus,
@@ -7,7 +6,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
 import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
 import { ApiPaginatedResponse } from '@/common/decorators/api-paginated-response.decorator';
@@ -16,7 +15,6 @@ import { PaginationDto } from '@/common/dto/pagination.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { TicketService } from '@ticket/services/ticket.service';
 import { TicketOutputDto } from '@ticket/dto/ticket-output.dto';
-import { CreateTicketDto } from '@ticket/dto/create-ticket.dto';
 
 @ApiTags('Tickets')
 @ApiUnauthorizedResponse({
@@ -24,7 +22,7 @@ import { CreateTicketDto } from '@ticket/dto/create-ticket.dto';
   description: 'Unauthorized',
   type: LoginUnauthorizedResponseType,
 })
-@Controller('tickets')
+@Controller('movies/:movieId/sessions/:sessionId/tickets')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
@@ -33,25 +31,33 @@ export class TicketController {
   @Get()
   @Permission('view:tickets')
   findAll(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
     @Query() paginationDto: PaginationDto,
   ): Promise<PaginatedResult<TicketOutputDto>> {
-    return this.ticketService.findAll(paginationDto);
+    return this.ticketService.findAll(movieId, sessionId, paginationDto);
   }
 
   @ApiOperation({ summary: 'Get a ticket by id' })
   @ApiOkResponse({ type: TicketOutputDto })
-  @Get(':id')
+  @Get(':ticketId')
   @Permission('view:ticket')
-  find(@Param('id') id: string): Promise<TicketOutputDto> {
-    return this.ticketService.find(id);
+  find(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
+    @Param('ticketId') ticketId: string,
+  ): Promise<TicketOutputDto> {
+    return this.ticketService.find(movieId, sessionId, ticketId);
   }
 
   @ApiOperation({ summary: 'Create a ticket' })
   @ApiOkResponse({ type: TicketOutputDto })
-  @ApiBody({ type: CreateTicketDto })
   @Post()
   @Permission('create:ticket')
-  create(@Body() createTicketDto: CreateTicketDto): Promise<TicketOutputDto> {
-    return this.ticketService.create(createTicketDto);
+  create(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
+  ): Promise<TicketOutputDto> {
+    return this.ticketService.create(movieId, sessionId);
   }
 }

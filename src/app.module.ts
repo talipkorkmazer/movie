@@ -7,6 +7,7 @@ import { PermissionModule } from '@permission/permission.module';
 import { MovieModule } from './movie/movie.module';
 import { SessionModule } from './session/session.module';
 import { TicketModule } from './ticket/ticket.module';
+import { WatchHistoryModule } from './watch-history/watch-history.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TicketModule } from './ticket/ticket.module';
     MovieModule,
     SessionModule,
     TicketModule,
+    WatchHistoryModule,
   ],
   controllers: [],
   providers: [],

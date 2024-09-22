@@ -36,7 +36,7 @@ import { SessionNotfoundResponseType } from '@session/types/session-notfound-res
   description: 'Unauthorized',
   type: LoginUnauthorizedResponseType,
 })
-@Controller('sessions')
+@Controller('movies/:movieId/sessions')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
@@ -45,17 +45,21 @@ export class SessionController {
   @Get()
   @Permission('view:sessions')
   findAll(
+    @Param('movieId') movieId: string,
     @Query() paginationDto: PaginationDto,
   ): Promise<PaginatedResult<SessionsOutputDto>> {
-    return this.sessionService.findAll(paginationDto);
+    return this.sessionService.findAll(movieId, paginationDto);
   }
 
   @ApiOperation({ summary: 'Get a session by id' })
   @ApiOkResponse({ type: SessionOutputDto })
-  @Get(':id')
+  @Get(':sessionId')
   @Permission('view:session')
-  find(@Param('id') id: string): Promise<SessionOutputDto> {
-    return this.sessionService.find(id);
+  find(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
+  ): Promise<SessionOutputDto> {
+    return this.sessionService.find(movieId, sessionId);
   }
 
   @ApiOperation({ summary: 'Create a session' })
@@ -64,17 +68,22 @@ export class SessionController {
   @Post()
   @Permission('create:session')
   create(
+    @Param('movieId') movieId: string,
     @Body() createSessionDto: CreateSessionDto,
   ): Promise<SessionOutputDto> {
-    return this.sessionService.create(createSessionDto);
+    return this.sessionService.create(movieId, createSessionDto);
   }
 
   @ApiOperation({ summary: 'Update a session' })
   @ApiOkResponse({ type: SessionOutputDto })
-  @Patch(':id')
+  @Patch(':sessionId')
   @Permission('update:session')
-  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
-    return this.sessionService.update(id, updateSessionDto);
+  update(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
+    @Body() updateSessionDto: UpdateSessionDto,
+  ) {
+    return this.sessionService.update(movieId, sessionId, updateSessionDto);
   }
 
   @ApiOperation({ summary: 'Delete a session' })
@@ -83,10 +92,13 @@ export class SessionController {
     type: SessionNotfoundResponseType,
     status: HttpStatus.NOT_FOUND,
   })
-  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':sessionId')
   @Permission('delete:session')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.sessionService.remove(id);
+  remove(
+    @Param('movieId') movieId: string,
+    @Param('sessionId') sessionId: string,
+  ): Promise<void> {
+    return this.sessionService.remove(movieId, sessionId);
   }
 }

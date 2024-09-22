@@ -158,13 +158,18 @@ export const permissions = [
 
   // Watch History Permissions
   {
-    name: 'view:watch-history',
-    description: 'View all watch history',
+    name: 'view:watch-histories',
+    description: 'View all watch histories',
     roles: [PREDEFINED_ROLES.CUSTOMER],
   },
   {
-    name: 'view:watch-history-entry',
-    description: 'View a specific watch history entry',
+    name: 'view:watch-history',
+    description: 'View a specific watch history',
+    roles: [PREDEFINED_ROLES.CUSTOMER],
+  },
+  {
+    name: 'create:watch-history',
+    description: 'Create a watch history',
     roles: [PREDEFINED_ROLES.CUSTOMER],
   },
 ];

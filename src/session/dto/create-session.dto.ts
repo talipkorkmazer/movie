@@ -30,9 +30,4 @@ export class CreateSessionDto {
   @IsNumber()
   @IsNotEmpty()
   roomNumber: number;
-
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsNotEmpty()
-  movieId: string;
 }
