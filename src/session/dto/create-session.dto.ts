@@ -17,7 +17,7 @@ export class CreateSessionDto {
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
-  date: string;
+  date: Date;
 
   @ApiProperty()
   @IsString()

@@ -75,6 +75,10 @@ export class WatchHistoryOutputDto {
   @IsString()
   id: string;
 
+  @ApiProperty()
+  @IsDate()
+  watchedAt: Date;
+
   @ApiProperty({ type: [User] })
   @Type(() => User)
   User: User;
@@ -86,8 +90,4 @@ export class WatchHistoryOutputDto {
   @ApiProperty({ type: [Session] })
   @Type(() => Session)
   Session: Session;
-
-  @ApiProperty()
-  @IsDate()
-  watchedAt: Date;
 }

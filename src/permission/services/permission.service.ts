@@ -24,7 +24,7 @@ export class PermissionService {
   }
 
   async find(id: string): Promise<PermissionOutputDto> {
-    const permission = this.prisma.permission.findFirst({
+    const permission = await this.prisma.permission.findFirst({
       where: {
         id: id,
       },

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TimeSlots } from '@session/dto/create-session.dto';
 
@@ -56,6 +56,7 @@ export class MoviesOutputDto {
   createdAt: Date;
 
   @ApiProperty({ type: [Sessions] })
+  @ValidateNested({ each: true })
   @Type(() => Sessions)
   Sessions: Sessions[];
 }

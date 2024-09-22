@@ -30,7 +30,7 @@ export class MovieService {
   }
 
   async find(id: string) {
-    const movie = this.prisma.movie.findFirst({
+    const movie = await this.prisma.movie.findFirst({
       where: {
         id: id,
       },
@@ -92,7 +92,6 @@ export class MovieService {
         where: { id },
       });
     } catch (e) {
-      console.log(e);
       throw new NotFoundException('Movie not found');
     }
   }

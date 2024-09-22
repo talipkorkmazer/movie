@@ -77,7 +77,7 @@ export class TicketService {
     await this.checkMovieAndSessionExistence(movieId, sessionId);
 
     const { id } = this.getCurrentUser();
-    const ticket = this.prisma.ticket.findFirst({
+    const ticket = await this.prisma.ticket.findFirst({
       where: {
         id: ticketId,
         userId: id,

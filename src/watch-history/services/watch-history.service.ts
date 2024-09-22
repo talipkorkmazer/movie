@@ -8,7 +8,6 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { createPaginator } from '@/common/pagination.helper';
-import { TicketOutputDto } from '@ticket/dto/ticket-output.dto';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { UserModel } from '@auth/models/auth.model';
@@ -81,7 +80,7 @@ export class WatchHistoryService {
     await this.checkMovieAndSessionExistence(movieId, sessionId);
 
     const { id } = this.getCurrentUser();
-    const watchHistory = this.prisma.watchHistory.findFirst({
+    const watchHistory = await this.prisma.watchHistory.findFirst({
       where: {
         id: ticketId,
         userId: id,

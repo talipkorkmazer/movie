@@ -34,7 +34,7 @@ export class SessionService {
   }
 
   async find(movieId: string, sessionId: string): Promise<SessionOutputDto> {
-    const session = this.prisma.session.findFirst({
+    const session = await this.prisma.session.findFirst({
       where: {
         id: sessionId,
         movieId,
@@ -106,7 +106,6 @@ export class SessionService {
         where: { id: sessionId, movieId },
       });
     } catch (e) {
-      console.log(e);
       throw new NotFoundException('Session not found');
     }
   }

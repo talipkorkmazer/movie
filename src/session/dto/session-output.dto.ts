@@ -19,6 +19,10 @@ export class SessionOutputDto {
   roomNumber: number;
 
   @ApiProperty()
+  @IsString()
+  movieId: string;
+
+  @ApiProperty()
   @IsDate()
   updatedAt: Date;
 
