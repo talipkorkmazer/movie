@@ -26,10 +26,13 @@ describe('MovieService', () => {
           useValue: {
             movie: {
               findFirst: jest.fn(),
-              count: jest.fn(),
+              findMany: jest.fn(),
               create: jest.fn(),
+              createMany: jest.fn(),
               update: jest.fn(),
               delete: jest.fn(),
+              deleteMany: jest.fn(),
+              count: jest.fn(),
             },
           },
         },
@@ -138,6 +141,63 @@ describe('MovieService', () => {
     });
   });
 
+  describe('bulkCreate', () => {
+    it('should create movies in bulk successfully', async () => {
+      const movies: CreateMovieDto[] = [
+        { name: 'Movie 1', ageRestriction: 12 },
+        { name: 'Movie 2', ageRestriction: 16 },
+      ];
+
+      // Simulate that no movies already exist
+      (prisma.movie.findMany as jest.Mock).mockResolvedValue([]);
+
+      // Simulate successful creation
+      (prisma.movie.createMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      // Simulate fetching created movies
+      const createdMovies = [
+        {
+          id: '1',
+          name: 'Movie 1',
+          ageRestriction: 12,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: '2',
+          name: 'Movie 2',
+          ageRestriction: 16,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
+      (prisma.movie.findMany as jest.Mock).mockResolvedValueOnce(createdMovies);
+
+      const result = await service.bulkCreate(movies);
+      expect(result).toEqual([
+        {
+          id: '1',
+          name: 'Movie 1',
+          ageRestriction: 12,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
+        {
+          id: '2',
+          name: 'Movie 2',
+          ageRestriction: 16,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
+      ]);
+      expect(prisma.movie.createMany).toHaveBeenCalledWith({
+        data: movies,
+        skipDuplicates: true,
+      });
+      expect(prisma.movie.findMany).toHaveBeenCalledTimes(1); // Called before and after create
+    });
+  });
+
   describe('update', () => {
     it('should update and return the movie', async () => {
       const updateMovieDto: UpdateMovieDto = {
@@ -186,6 +246,32 @@ describe('MovieService', () => {
       await expect(service.remove('nonexistent-id')).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('bulkRemove', () => {
+    it('should bulk remove movies successfully', async () => {
+      const movieIds = ['1', '2'];
+
+      (prisma.movie.deleteMany as jest.Mock).mockResolvedValue({ count: 2 });
+
+      await service.bulkRemove(movieIds);
+      expect(prisma.movie.deleteMany).toHaveBeenCalledWith({
+        where: { id: { in: movieIds } },
+      });
+    });
+
+    it('should throw NotFoundException if some movies are not found during bulk delete', async () => {
+      const movieIds = ['1', '2'];
+
+      (prisma.movie.deleteMany as jest.Mock).mockResolvedValue({ count: 1 }); // Only 1 deleted
+
+      await expect(service.bulkRemove(movieIds)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(prisma.movie.deleteMany).toHaveBeenCalledWith({
+        where: { id: { in: movieIds } },
+      });
     });
   });
 });

@@ -43,7 +43,7 @@ export class MovieService {
     return movie;
   }
 
-  async create(createMovieDto: CreateMovieDto) {
+  async create(createMovieDto: CreateMovieDto): Promise<MovieOutputDto> {
     const movieExists = await this.prisma.movie.count({
       where: {
         name: createMovieDto.name,
@@ -57,6 +57,19 @@ export class MovieService {
       data: {
         name: createMovieDto.name,
         ageRestriction: createMovieDto.ageRestriction,
+      },
+    });
+  }
+
+  async bulkCreate(movies: CreateMovieDto[]): Promise<MovieOutputDto[]> {
+    await this.prisma.movie.createMany({
+      data: movies,
+      skipDuplicates: true,
+    });
+
+    return this.prisma.movie.findMany({
+      where: {
+        name: { in: movies.map(movie => movie.name) },
       },
     });
   }
@@ -93,6 +106,18 @@ export class MovieService {
       });
     } catch (e) {
       throw new NotFoundException('Movie not found');
+    }
+  }
+
+  async bulkRemove(movieIds: string[]): Promise<void> {
+    const deletedCount = await this.prisma.movie.deleteMany({
+      where: {
+        id: { in: movieIds },
+      },
+    });
+
+    if (deletedCount.count !== movieIds.length) {
+      throw new NotFoundException('Some movies not found');
     }
   }
 }

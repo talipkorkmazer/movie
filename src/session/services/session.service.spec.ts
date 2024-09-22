@@ -51,7 +51,7 @@ describe('SessionService', () => {
         data: [
           {
             id: '1',
-            date: new Date('2024-09-22'),
+            date: new Date(),
             timeSlot: '10:00-12:00',
             roomNumber: 1,
             Movie: { id: '1', name: 'Movie 1' },
@@ -89,7 +89,7 @@ describe('SessionService', () => {
       const session = {
         id: sessionId,
         movieId,
-        date: new Date('2024-09-22'),
+        date: new Date(),
         timeSlot: '10:00-12:00',
         roomNumber: 1,
       };
@@ -119,53 +119,60 @@ describe('SessionService', () => {
   });
 
   describe('create', () => {
-    it('should create and return a new session', async () => {
-      const movieId = '1';
+    it('should throw a ConflictException if the room is already booked for the same date and time slot', async () => {
       const createSessionDto: CreateSessionDto = {
-        date: new Date('2024-09-22'),
+        date: new Date(),
         timeSlot: '10:00-12:00',
         roomNumber: 1,
       };
+      const movieId = 'movie1';
 
-      const createdSession = {
-        id: '1',
-        movieId,
-        ...createSessionDto,
-      };
-
-      (prisma.session.count as jest.Mock).mockResolvedValue(0); // No existing session
-      (prisma.session.create as jest.Mock).mockResolvedValue(createdSession);
-
-      const result = await service.create(movieId, createSessionDto);
-      expect(result).toEqual(createdSession);
-      expect(prisma.session.count).toHaveBeenCalledWith({
-        where: {
-          movieId,
-          date: createSessionDto.date,
-          timeSlot: createSessionDto.timeSlot,
-          roomNumber: createSessionDto.roomNumber,
-        },
-      });
-      expect(prisma.session.create).toHaveBeenCalledWith({
-        data: { movieId, ...createSessionDto },
-      });
-    });
-
-    it('should throw ConflictException if a session already exists for the same movie, time slot, and date', async () => {
-      const movieId = '1';
-      const createSessionDto: CreateSessionDto = {
-        date: new Date('2024-09-22'),
-        timeSlot: '10:00-12:00',
-        roomNumber: 1,
-      };
-
-      (prisma.session.count as jest.Mock).mockResolvedValue(1); // Session already exists
+      // Simulate a double-booking
+      (prisma.session.count as jest.Mock).mockResolvedValue(1); // Room is already booked
 
       await expect(service.create(movieId, createSessionDto)).rejects.toThrow(
         ConflictException,
       );
       expect(prisma.session.count).toHaveBeenCalledWith({
         where: {
+          date: createSessionDto.date,
+          timeSlot: createSessionDto.timeSlot,
+          roomNumber: createSessionDto.roomNumber,
+        },
+      });
+      expect(prisma.session.create).not.toHaveBeenCalled();
+    });
+
+    it('should create a session successfully if the room is not booked', async () => {
+      const createSessionDto: CreateSessionDto = {
+        date: new Date(),
+        timeSlot: '10:00-12:00',
+        roomNumber: 1,
+      };
+      const movieId = 'movie1';
+
+      // Simulate that the room is not booked
+      (prisma.session.count as jest.Mock).mockResolvedValue(0); // Room is available
+
+      // Simulate successful creation of a session
+      const createdSession = {
+        id: 'sessionId1',
+        movieId,
+        ...createSessionDto,
+      };
+      (prisma.session.create as jest.Mock).mockResolvedValue(createdSession);
+
+      const result = await service.create(movieId, createSessionDto);
+      expect(result).toEqual(createdSession);
+      expect(prisma.session.count).toHaveBeenCalledWith({
+        where: {
+          date: createSessionDto.date,
+          timeSlot: createSessionDto.timeSlot,
+          roomNumber: createSessionDto.roomNumber,
+        },
+      });
+      expect(prisma.session.create).toHaveBeenCalledWith({
+        data: {
           movieId,
           date: createSessionDto.date,
           timeSlot: createSessionDto.timeSlot,
@@ -180,7 +187,7 @@ describe('SessionService', () => {
       const movieId = '1';
       const sessionId = '1';
       const updateSessionDto: UpdateSessionDto = {
-        date: new Date('2024-09-23'),
+        date: new Date(),
         timeSlot: '12:00-14:00',
         roomNumber: 2,
       };
@@ -209,7 +216,7 @@ describe('SessionService', () => {
       const movieId = '1';
       const sessionId = 'nonexistent-id';
       const updateSessionDto: UpdateSessionDto = {
-        date: new Date('2024-09-23'),
+        date: new Date(),
         timeSlot: '12:00-14:00',
         roomNumber: 2,
       };

@@ -56,16 +56,16 @@ describe('RoleService', () => {
           {
             id: '1',
             name: 'Role 1',
-            createdAt: new Date('2024-09-22T15:31:30.128Z'),
-            updatedAt: new Date('2024-09-22T15:31:30.128Z'),
+            createdAt: new Date(),
+            updatedAt: new Date(),
             Permissions: [
               {
                 permission: {
                   id: '1',
                   name: 'Permission 1',
                   description: 'Description 1',
-                  createdAt: new Date('2024-09-22T15:31:30.128Z'),
-                  updatedAt: new Date('2024-09-22T15:31:30.128Z'),
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
                 },
               },
             ],
@@ -86,15 +86,15 @@ describe('RoleService', () => {
           {
             id: '1',
             name: 'Role 1',
-            createdAt: new Date('2024-09-22T15:31:30.128Z'),
-            updatedAt: new Date('2024-09-22T15:31:30.128Z'),
+            createdAt: new Date(),
+            updatedAt: new Date(),
             Permissions: [
               {
                 id: '1',
                 name: 'Permission 1',
                 description: 'Description 1',
-                createdAt: new Date('2024-09-22T15:31:30.128Z'),
-                updatedAt: new Date('2024-09-22T15:31:30.128Z'),
+                createdAt: new Date(),
+                updatedAt: new Date(),
               },
             ],
           },

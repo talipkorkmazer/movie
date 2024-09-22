@@ -67,12 +67,29 @@ export class MovieController {
     return this.movieService.create(createMovieDto);
   }
 
+  @ApiOperation({ summary: 'Bulk create movies' })
+  @ApiBody({ type: [CreateMovieDto] })
+  @Post('bulk')
+  @Permission('create:movie')
+  async bulkCreate(@Body() movies: CreateMovieDto[]) {
+    return this.movieService.bulkCreate(movies);
+  }
+
   @ApiOperation({ summary: 'Update a movie' })
   @ApiOkResponse({ type: MovieOutputDto })
   @Patch(':id')
   @Permission('update:movie')
   update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
     return this.movieService.update(id, updateMovieDto);
+  }
+
+  @ApiOperation({ summary: 'Bulk delete movies' })
+  @ApiBody({ schema: { example: { ids: ['movieId1', 'movieId2'] } } })
+  @Delete('bulk')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Permission('delete:movie')
+  async bulkRemove(@Body('ids') movieIds: string[]) {
+    await this.movieService.bulkRemove(movieIds);
   }
 
   @ApiOperation({ summary: 'Delete a movie' })

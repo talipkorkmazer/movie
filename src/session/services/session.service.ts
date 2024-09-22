@@ -48,10 +48,12 @@ export class SessionService {
     return session;
   }
 
-  async create(movieId: string, createSessionDto: CreateSessionDto) {
+  async create(
+    movieId: string,
+    createSessionDto: CreateSessionDto,
+  ): Promise<SessionOutputDto> {
     const sessionExists = await this.prisma.session.count({
       where: {
-        movieId: movieId,
         date: createSessionDto.date,
         timeSlot: createSessionDto.timeSlot,
         roomNumber: createSessionDto.roomNumber,
@@ -59,7 +61,9 @@ export class SessionService {
     });
 
     if (sessionExists) {
-      throw new ConflictException('Session already exists');
+      throw new ConflictException(
+        'The room is already booked for this date and time slot.',
+      );
     }
 
     return this.prisma.session.create({
@@ -100,7 +104,7 @@ export class SessionService {
     });
   }
 
-  async remove(movieId: string, sessionId: string) {
+  async remove(movieId: string, sessionId: string): Promise<void> {
     try {
       await this.prisma.session.delete({
         where: { id: sessionId, movieId },
