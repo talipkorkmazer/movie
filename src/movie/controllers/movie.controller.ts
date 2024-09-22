@@ -30,6 +30,7 @@ import { ApiPaginatedResponse } from '@/common/decorators/api-paginated-response
 import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { MovieConflictResponseType } from '@movie/types/movie-conflict-response.type';
+import { MoviePaginationDto } from '@movie/dto/movie-pagination.dto';
 
 @ApiTags('Movies')
 @ApiUnauthorizedResponse({
@@ -46,7 +47,7 @@ export class MovieController {
   @Get()
   @Permission('view:movies')
   findAll(
-    @Query() paginationDto: PaginationDto,
+    @Query() paginationDto: MoviePaginationDto,
   ): Promise<PaginatedResult<MoviesOutputDto>> {
     return this.movieService.findAll(paginationDto);
   }

@@ -40,7 +40,7 @@ describe('RoleController', () => {
   describe('findAll', () => {
     it('should return a paginated result of roles with transformed permissions', async () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
-
+      const now = new Date();
       const paginatedRoles: PaginatedResult<RolesOutputDto> = {
         data: [
           {
@@ -51,12 +51,12 @@ describe('RoleController', () => {
                 id: '1',
                 name: 'Permission 1',
                 description: 'Permission 1 description',
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                createdAt: now,
+                updatedAt: now,
               },
             ],
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
           },
         ],
         meta: {
@@ -79,6 +79,7 @@ describe('RoleController', () => {
 
   describe('find', () => {
     it('should return a role with permissions by ID', async () => {
+      const now = new Date();
       const role = {
         id: '1',
         name: 'Role 1',
@@ -87,12 +88,12 @@ describe('RoleController', () => {
             id: '1',
             name: 'Permission 1',
             description: 'Permission 1 description',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
           },
         ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: now,
+        updatedAt: now,
       };
 
       (service.find as jest.Mock).mockResolvedValue(role);

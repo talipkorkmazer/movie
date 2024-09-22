@@ -5,9 +5,10 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 import { UpdateMovieDto } from '../dto/update-movie.dto';
 import { PaginationDto } from '@/common/dto/pagination.dto';
-import { createPaginator } from '@/common/pagination.helper';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
+import { createPaginator } from '@/common/pagination.helper';
+import { MoviePaginationDto } from '@movie/dto/movie-pagination.dto';
 
 jest.mock('@/common/pagination.helper', () => ({
   createPaginator: jest.fn(() => jest.fn()), // Mock pagination
@@ -50,14 +51,15 @@ describe('MovieService', () => {
   describe('findAll', () => {
     it('should return paginated result of movies', async () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
+      const now = new Date();
       const paginatedResult: PaginatedResult<MoviesOutputDto> = {
         data: [
           {
             id: '1',
             name: 'Movie 1',
             ageRestriction: 18,
-            updatedAt: new Date(),
-            createdAt: new Date(),
+            updatedAt: now,
+            createdAt: now,
             Sessions: [],
           },
         ],
@@ -79,6 +81,65 @@ describe('MovieService', () => {
       expect(createPaginator).toHaveBeenCalledWith(paginationDto);
       expect(paginate).toHaveBeenCalledWith(prisma.movie, {
         include: { Sessions: true },
+        where: {},
+        orderBy: {},
+      });
+      expect(result).toEqual(paginatedResult);
+    });
+
+    it('should return filtered movie results', async () => {
+      const paginationDto: MoviePaginationDto = {
+        page: 1,
+        limit: 10,
+        name: 'Filtered Movie',
+        ageRestriction: 13,
+      };
+      const now = new Date();
+      const filteredMovies = [
+        {
+          id: '1',
+          name: 'Filtered Movie 1',
+          ageRestriction: 13,
+          updatedAt: now,
+          createdAt: now,
+          Sessions: [],
+        },
+        {
+          id: '2',
+          name: 'Filtered Movie 2',
+          ageRestriction: 13,
+          updatedAt: now,
+          createdAt: now,
+          Sessions: [],
+        },
+      ];
+
+      const paginatedResult: PaginatedResult<MoviesOutputDto> = {
+        data: filteredMovies,
+        meta: {
+          currentPage: 1,
+          lastPage: 1,
+          next: null,
+          perPage: 10,
+          prev: null,
+          total: 2,
+        },
+      };
+
+      const paginate = jest.fn().mockResolvedValue(paginatedResult);
+
+      (createPaginator as jest.Mock).mockReturnValue(paginate);
+
+      const result = await service.findAll(paginationDto);
+
+      expect(createPaginator).toHaveBeenCalledWith(paginationDto);
+      expect(paginate).toHaveBeenCalledWith(prisma.movie, {
+        include: { Sessions: true },
+        where: {
+          name: { contains: 'Filtered Movie' },
+          ageRestriction: 13,
+        },
+        orderBy: {},
       });
       expect(result).toEqual(paginatedResult);
     });
@@ -148,6 +209,8 @@ describe('MovieService', () => {
         { name: 'Movie 2', ageRestriction: 16 },
       ];
 
+      const now = new Date();
+
       // Simulate that no movies already exist
       (prisma.movie.findMany as jest.Mock).mockResolvedValue([]);
 
@@ -160,15 +223,15 @@ describe('MovieService', () => {
           id: '1',
           name: 'Movie 1',
           ageRestriction: 12,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: now,
+          updatedAt: now,
         },
         {
           id: '2',
           name: 'Movie 2',
           ageRestriction: 16,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: now,
+          updatedAt: now,
         },
       ];
       (prisma.movie.findMany as jest.Mock).mockResolvedValueOnce(createdMovies);

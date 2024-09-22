@@ -38,25 +38,25 @@ describe('TicketController', () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const paginatedTickets: PaginatedResult<TicketOutputDto> = {
         data: [
           {
             id: '1',
-            purchaseDate: new Date(),
+            purchaseDate: now,
             Session: {
               id: 'sessionId',
               date: new Date(),
               timeSlot: '10:00-12:00',
               roomNumber: 1,
-              updatedAt: new Date(),
-              createdAt: new Date(),
+              updatedAt: now,
+              createdAt: now,
               Movie: {
                 id: movieId,
                 name: 'Movie 1',
                 ageRestriction: 18,
-                updatedAt: new Date(),
-                createdAt: new Date(),
+                updatedAt: now,
+                createdAt: now,
               },
             },
             User: { id: 'userId', username: 'user1', age: 25 },
@@ -93,23 +93,23 @@ describe('TicketController', () => {
       const movieId = '1';
       const sessionId = '1';
       const ticketId = '1';
-
+      const now = new Date();
       const ticket: TicketOutputDto = {
         id: ticketId,
-        purchaseDate: new Date(),
+        purchaseDate: now,
         Session: {
           id: sessionId,
-          date: new Date(),
+          date: now,
           timeSlot: '10:00-12:00',
           roomNumber: 1,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
           Movie: {
             id: movieId,
             name: 'Movie 1',
             ageRestriction: 18,
-            updatedAt: new Date(),
-            createdAt: new Date(),
+            updatedAt: now,
+            createdAt: now,
           },
         },
         User: { id: 'userId', username: 'user1', age: 25 },
@@ -140,23 +140,23 @@ describe('TicketController', () => {
     it('should create and return a new ticket', async () => {
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const createdTicket: TicketOutputDto = {
         id: '1',
-        purchaseDate: new Date(),
+        purchaseDate: now,
         Session: {
           id: sessionId,
-          date: new Date(),
+          date: now,
           timeSlot: '10:00-12:00',
           roomNumber: 1,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
           Movie: {
             id: movieId,
             name: 'Movie 1',
             ageRestriction: 18,
-            updatedAt: new Date(),
-            createdAt: new Date(),
+            updatedAt: now,
+            createdAt: now,
           },
         },
         User: { id: 'userId', username: 'user1', age: 25 },

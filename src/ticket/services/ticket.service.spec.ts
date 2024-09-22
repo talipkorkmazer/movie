@@ -58,15 +58,15 @@ describe('TicketService', () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const paginatedTickets: PaginatedResult<any> = {
         data: [
           {
             id: '1',
-            purchaseDate: new Date(),
+            purchaseDate: now,
             Session: {
               id: 'sessionId',
-              date: new Date(),
+              date: now,
               timeSlot: '10:00-12:00',
               roomNumber: 1,
               Movie: {
@@ -112,13 +112,13 @@ describe('TicketService', () => {
       const movieId = '1';
       const sessionId = '1';
       const ticketId = '1';
-
+      const now = new Date();
       const ticket = {
         id: ticketId,
-        purchaseDate: new Date(),
+        purchaseDate: now,
         Session: {
           id: sessionId,
-          date: new Date(),
+          date: now,
           timeSlot: '10:00-12:00',
           roomNumber: 1,
           Movie: { id: movieId, name: 'Movie 1', ageRestriction: 18 },
@@ -163,13 +163,13 @@ describe('TicketService', () => {
     it('should create and return a new ticket', async () => {
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const createdTicket = {
         id: '1',
-        purchaseDate: new Date(),
+        purchaseDate: now,
         Session: {
           id: sessionId,
-          date: new Date(),
+          date: now,
           timeSlot: '10:00-12:00',
           roomNumber: 1,
           Movie: { id: movieId, name: 'Movie 1', ageRestriction: 18 },

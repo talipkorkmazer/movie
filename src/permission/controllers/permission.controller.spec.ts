@@ -40,14 +40,15 @@ describe('PermissionController', () => {
   describe('findAll', () => {
     it('should return a paginated result of permissions', async () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
+      const now = new Date();
       const paginatedResult: PaginatedResult<PermissionOutputDto> = {
         data: [
           {
             id: '1',
             name: 'Permission 1',
             description: 'Description',
-            updatedAt: new Date(),
-            createdAt: new Date(),
+            updatedAt: now,
+            createdAt: now,
           },
         ],
         meta: {

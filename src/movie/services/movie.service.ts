@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PaginationDto } from '@/common/dto/pagination.dto';
 import { CreateMovieDto } from '@movie/dto/create-movie.dto';
 import { UpdateMovieDto } from '@movie/dto/update-movie.dto';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -11,22 +10,35 @@ import { createPaginator } from '@/common/pagination.helper';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
 import { MovieOutputDto } from '@movie/dto/movie-output.dto';
+import { MoviePaginationDto } from '@movie/dto/movie-pagination.dto';
 
 @Injectable()
 export class MovieService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(
-    paginationDto: PaginationDto,
+    paginationDto: MoviePaginationDto,
   ): Promise<PaginatedResult<MoviesOutputDto>> {
+    const { sortBy, order, name, ageRestriction } = paginationDto;
     const paginate = createPaginator(paginationDto);
-    const include = {
+
+    const where = {
+      ...(name && { name: { contains: name } }),
+      ...(ageRestriction && { ageRestriction }),
+    };
+
+    // Sorting logic
+    const orderBy = sortBy ? { [sortBy]: order } : {};
+
+    const includeFilterSort = {
       include: {
         Sessions: true,
       },
+      where,
+      orderBy,
     };
 
-    return await paginate(this.prisma.movie, include);
+    return await paginate(this.prisma.movie, includeFilterSort);
   }
 
   async find(id: string) {

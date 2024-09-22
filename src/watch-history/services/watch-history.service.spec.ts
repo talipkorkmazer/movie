@@ -59,26 +59,26 @@ describe('WatchHistoryService', () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const paginatedWatchHistory: PaginatedResult<WatchHistoryOutputDto> = {
         data: [
           {
             id: '1',
-            watchedAt: new Date(),
+            watchedAt:now,
             Session: {
               id: 'sessionId',
-              date: new Date(),
+              date: now,
               timeSlot: '10:00-12:00',
               roomNumber: 1,
-              updatedAt: new Date(),
-              createdAt: new Date(),
+              updatedAt: now,
+              createdAt: now,
             },
             Movie: {
               id: movieId,
               name: 'Movie 1',
               ageRestriction: 18,
-              updatedAt: new Date(),
-              createdAt: new Date(),
+              updatedAt: now,
+              createdAt: now,
             },
             User: { id: 'userId', username: 'user1', age: 25 },
           },
@@ -120,24 +120,24 @@ describe('WatchHistoryService', () => {
       const movieId = '1';
       const sessionId = '1';
       const ticketId = '1';
-
+      const now = new Date();
       const watchHistory: WatchHistoryOutputDto = {
         id: ticketId,
-        watchedAt: new Date(),
+        watchedAt: now,
         Session: {
           id: sessionId,
-          date: new Date(),
+          date: now,
           timeSlot: '10:00-12:00',
           roomNumber: 1,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
         },
         Movie: {
           id: movieId,
           name: 'Movie 1',
           ageRestriction: 18,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
         },
         User: { id: 'userId', username: 'user1', age: 25 },
       };
@@ -181,24 +181,24 @@ describe('WatchHistoryService', () => {
     it('should create and return a new watch history entry', async () => {
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const createdWatchHistory: WatchHistoryOutputDto = {
         id: '1',
-        watchedAt: new Date(),
+        watchedAt: now,
         Session: {
           id: sessionId,
           date: new Date(),
           timeSlot: '10:00-12:00',
           roomNumber: 1,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
         },
         Movie: {
           id: movieId,
           name: 'Movie 1',
           ageRestriction: 18,
-          updatedAt: new Date(),
-          createdAt: new Date(),
+          updatedAt: now,
+          createdAt: now,
         },
         User: { id: 'userId', username: 'user1', age: 25 },
       };

@@ -50,22 +50,22 @@ describe('RoleService', () => {
   describe('findAll', () => {
     it('should return a paginated result of roles with transformed permissions', async () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
-
+      const now = new Date();
       const paginatedRolesFromDb = {
         data: [
           {
             id: '1',
             name: 'Role 1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
             Permissions: [
               {
                 permission: {
                   id: '1',
                   name: 'Permission 1',
                   description: 'Description 1',
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
+                  createdAt: now,
+                  updatedAt: now,
                 },
               },
             ],
@@ -86,15 +86,15 @@ describe('RoleService', () => {
           {
             id: '1',
             name: 'Role 1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
             Permissions: [
               {
                 id: '1',
                 name: 'Permission 1',
                 description: 'Description 1',
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                createdAt: now,
+                updatedAt: now,
               },
             ],
           },
@@ -125,19 +125,20 @@ describe('RoleService', () => {
 
   describe('find', () => {
     it('should return a role with permissions by ID', async () => {
+      const now = new Date();
       const role = {
         id: '1',
         name: 'Role 1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: now,
+        updatedAt: now,
         Permissions: [
           {
             permission: {
               id: '1',
               name: 'Permission 1',
               description: 'Description 1',
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: now,
+              updatedAt: now,
             },
           },
         ],
@@ -153,8 +154,8 @@ describe('RoleService', () => {
             id: '1',
             name: 'Permission 1',
             description: 'Description 1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
           },
         ],
       });

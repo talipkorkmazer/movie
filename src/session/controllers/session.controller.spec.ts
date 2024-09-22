@@ -42,22 +42,22 @@ describe('SessionController', () => {
     it('should return a paginated result of sessions', async () => {
       const paginationDto: PaginationDto = { page: 1, limit: 10 };
       const movieId = '1';
-
+      const now = new Date();
       const paginatedSessions: PaginatedResult<SessionsOutputDto> = {
         data: [
           {
             id: '1',
-            date: new Date(),
+            date: now,
             timeSlot: '10:00-12:00',
             roomNumber: 1,
-            updatedAt: new Date(),
-            createdAt: new Date(),
+            updatedAt: now,
+            createdAt: now,
             Movie: {
               id: '1',
               name: 'Movie 1',
               ageRestriction: 18,
-              updatedAt: new Date(),
-              createdAt: new Date(),
+              updatedAt: now,
+              createdAt: now,
             },
           },
         ],
@@ -83,15 +83,15 @@ describe('SessionController', () => {
     it('should return a session by movie ID and session ID', async () => {
       const movieId = '1';
       const sessionId = '1';
-
+      const now = new Date();
       const session: SessionOutputDto = {
         id: sessionId,
         date: new Date(),
         movieId,
         timeSlot: '10:00-12:00',
         roomNumber: 1,
-        updatedAt: new Date(),
-        createdAt: new Date(),
+        updatedAt: now,
+        createdAt: now,
       };
 
       (service.find as jest.Mock).mockResolvedValue(session);
