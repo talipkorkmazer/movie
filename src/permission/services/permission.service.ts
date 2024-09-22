@@ -70,6 +70,24 @@ export class PermissionService {
     id: string,
     updatePermissionDto: UpdatePermissionDto,
   ): Promise<PermissionOutputDto> {
+    const permissionExistsWithId = await this.prisma.permission.count({
+      where: {
+        id,
+      },
+    });
+    if (!permissionExistsWithId) {
+      throw new NotFoundException('Permission not found');
+    }
+
+    const permissionExistsWithName = await this.prisma.permission.count({
+      where: {
+        name: updatePermissionDto.name,
+      },
+    });
+    if (permissionExistsWithName) {
+      throw new ConflictException('Permission already exists');
+    }
+
     const permission = await this.prisma.permission.update({
       where: {
         id: id,

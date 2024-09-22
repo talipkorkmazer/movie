@@ -14,7 +14,7 @@ import { RoleService } from '@role/services/role.service';
 import { CreateRoleDto } from '@role/dto/create-role.dto';
 import { UpdateRoleDto } from '@role/dto/update-role.dto';
 import {
-  ApiBody,
+  ApiBody, ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -28,6 +28,7 @@ import { PaginationDto } from '@/common/dto/pagination.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { RoleOutputDto } from '@role/dto/role-output.dto';
 import { RoleNotfoundResponseType } from '@role/types/role-notfound-response.type';
+import { RoleConflictResponseType } from '@role/types/role-conflict-response.type';
 
 @ApiTags('Roles')
 @ApiUnauthorizedResponse({
@@ -51,6 +52,11 @@ export class RoleController {
 
   @ApiOperation({ summary: 'Get a role by id' })
   @ApiOkResponse({ type: RolesOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Role not found',
+    type: RoleNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Get(':id')
   @Permission('view:role')
   find(@Param('id') id: string): Promise<RolesOutputDto> {
@@ -59,6 +65,11 @@ export class RoleController {
 
   @ApiOperation({ summary: 'Create a role' })
   @ApiOkResponse({ type: RoleOutputDto })
+  @ApiConflictResponse({
+    description: 'Movie already exists',
+    type: RoleConflictResponseType,
+    status: HttpStatus.CONFLICT,
+  })
   @ApiBody({ type: CreateRoleDto })
   @Post()
   @Permission('create:role')
@@ -68,6 +79,11 @@ export class RoleController {
 
   @ApiOperation({ summary: 'Update a role' })
   @ApiOkResponse({ type: RoleOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Role not found',
+    type: RoleNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Patch(':id')
   @Permission('update:role')
   update(

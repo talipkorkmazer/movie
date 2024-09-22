@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import {
-  ApiBody,
+  ApiBody, ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -29,6 +29,7 @@ import { SessionOutputDto } from '@session/dto/session-output.dto';
 import { CreateSessionDto } from '@session/dto/create-session.dto';
 import { UpdateSessionDto } from '@session/dto/update-session.dto';
 import { SessionNotfoundResponseType } from '@session/types/session-notfound-response.type';
+import { SessionConflictResponseType } from '@session/types/session-conflict-response.type';
 
 @ApiTags('Sessions')
 @ApiUnauthorizedResponse({
@@ -53,6 +54,11 @@ export class SessionController {
 
   @ApiOperation({ summary: 'Get a session by id' })
   @ApiOkResponse({ type: SessionOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Session not found',
+    type: SessionNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Get(':sessionId')
   @Permission('view:session')
   find(
@@ -64,6 +70,11 @@ export class SessionController {
 
   @ApiOperation({ summary: 'Create a session' })
   @ApiOkResponse({ type: SessionOutputDto })
+  @ApiConflictResponse({
+    description: 'Session already exists',
+    type: SessionConflictResponseType,
+    status: HttpStatus.CONFLICT,
+  })
   @ApiBody({ type: CreateSessionDto })
   @Post()
   @Permission('create:session')
@@ -76,6 +87,11 @@ export class SessionController {
 
   @ApiOperation({ summary: 'Update a session' })
   @ApiOkResponse({ type: SessionOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Session not found',
+    type: SessionNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Patch(':sessionId')
   @Permission('update:session')
   update(

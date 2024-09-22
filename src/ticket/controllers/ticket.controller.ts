@@ -6,7 +6,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
 import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
 import { ApiPaginatedResponse } from '@/common/decorators/api-paginated-response.decorator';
@@ -15,6 +15,8 @@ import { PaginationDto } from '@/common/dto/pagination.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
 import { TicketService } from '@ticket/services/ticket.service';
 import { TicketOutputDto } from '@ticket/dto/ticket-output.dto';
+import { TicketNotfoundResponseType } from '@ticket/types/ticket-notfound-response.type';
+import { TicketConflictResponseType } from '@ticket/types/ticket-conflict-response.type';
 
 @ApiTags('Tickets')
 @ApiUnauthorizedResponse({
@@ -40,6 +42,11 @@ export class TicketController {
 
   @ApiOperation({ summary: 'Get a ticket by id' })
   @ApiOkResponse({ type: TicketOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Ticket not found',
+    type: TicketNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Get(':ticketId')
   @Permission('view:ticket')
   find(
@@ -52,6 +59,11 @@ export class TicketController {
 
   @ApiOperation({ summary: 'Create a ticket' })
   @ApiOkResponse({ type: TicketOutputDto })
+  @ApiConflictResponse({
+    description: 'Movie already exists',
+    type: TicketConflictResponseType,
+    status: HttpStatus.CONFLICT,
+  })
   @Post()
   @Permission('create:ticket')
   create(

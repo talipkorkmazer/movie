@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import {
-  ApiBody,
+  ApiBody, ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -29,6 +29,7 @@ import { MovieNotfoundResponseType } from '@movie/types/movie-notfound-response.
 import { ApiPaginatedResponse } from '@/common/decorators/api-paginated-response.decorator';
 import { MoviesOutputDto } from '@movie/dto/movies-output.dto';
 import { PaginatedResult } from '@/common/types/paginated-result';
+import { MovieConflictResponseType } from '@movie/types/movie-conflict-response.type';
 
 @ApiTags('Movies')
 @ApiUnauthorizedResponse({
@@ -52,6 +53,11 @@ export class MovieController {
 
   @ApiOperation({ summary: 'Get a movie by id' })
   @ApiOkResponse({ type: MovieOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Movie not found',
+    type: MovieNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Get(':id')
   @Permission('view:movie')
   find(@Param('id') id: string): Promise<MovieOutputDto> {
@@ -60,6 +66,11 @@ export class MovieController {
 
   @ApiOperation({ summary: 'Create a movie' })
   @ApiOkResponse({ type: MovieOutputDto })
+  @ApiConflictResponse({
+    description: 'Movie already exists',
+    type: MovieConflictResponseType,
+    status: HttpStatus.CONFLICT,
+  })
   @ApiBody({ type: CreateMovieDto })
   @Post()
   @Permission('create:movie')
@@ -77,6 +88,11 @@ export class MovieController {
 
   @ApiOperation({ summary: 'Update a movie' })
   @ApiOkResponse({ type: MovieOutputDto })
+  @ApiNotFoundResponse({
+    description: 'Movie not found',
+    type: MovieNotfoundResponseType,
+    status: HttpStatus.NOT_FOUND,
+  })
   @Patch(':id')
   @Permission('update:movie')
   update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
