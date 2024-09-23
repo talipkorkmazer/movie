@@ -39,7 +39,7 @@ To run this project locally, follow these steps:
 
 4. Copy the `.env.example` file to `.env` and fill in the necessary environment variables:
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
 
    Example variables to configure:
