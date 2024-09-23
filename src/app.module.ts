@@ -4,10 +4,10 @@ import { PrismaModule } from '@/prisma/prisma.module';
 import { AuthModule } from '@auth/auth.module';
 import { RoleModule } from '@role/role.module';
 import { PermissionModule } from '@permission/permission.module';
-import { MovieModule } from './movie/movie.module';
-import { SessionModule } from './session/session.module';
-import { TicketModule } from './ticket/ticket.module';
-import { WatchHistoryModule } from './watch-history/watch-history.module';
+import { MovieModule } from '@movie/movie.module';
+import { SessionModule } from '@session/session.module';
+import { TicketModule } from '@ticket/ticket.module';
+import { WatchHistoryModule } from '@watch-history/watch-history.module';
 
 @Module({
   imports: [

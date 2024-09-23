@@ -25,6 +25,7 @@
       "@role/*": ["src/role/*"],
       "@session/*": ["src/session/*"],
       "@ticket/*": ["src/ticket/*"],
+      "@watch-history/*": ["src/watch-history/*"],
     }
   }
 }

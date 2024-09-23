@@ -88,7 +88,8 @@
       "^@permission/(.*)$": "<rootDir>/permission/$1",
       "^@role/(.*)$": "<rootDir>/role/$1",
       "^@session/(.*)$": "<rootDir>/session/$1",
-      "^@ticket/(.*)$": "<rootDir>/ticket/$1"
+      "^@ticket/(.*)$": "<rootDir>/ticket/$1",
+      "^@watch-history/(.*)$": "<rootDir>/watch-history/$1"
     }
   },
   "prisma": {
