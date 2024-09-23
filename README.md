@@ -128,6 +128,11 @@ The application uses the **Swagger** module to provide API documentation. Once t
 http://localhost:3000/api
 ```
 
+## Heroku Deployment
+This project has been deployed to Heroku. You can access the live application at:
+
+https://talip-movie-5457d0dd0e2f.herokuapp.com
+
 ## Folder Structure
 
 The folder structure of the project is organized as follows:
