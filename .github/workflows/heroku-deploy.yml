@@ -28,5 +28,5 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku git:remote --app your-heroku-app-name
+          heroku git:remote --app talip-movie
           git push heroku main
