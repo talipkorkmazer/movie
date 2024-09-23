@@ -84,6 +84,7 @@ model Ticket {
   id           String   @id @default(uuid())
   userId       String
   sessionId    String
+  isUsed       Boolean  @default(false)
   purchaseDate DateTime @default(now())
   User         User     @relation(fields: [userId], references: [id])
   Session      Session  @relation(fields: [sessionId], references: [id])

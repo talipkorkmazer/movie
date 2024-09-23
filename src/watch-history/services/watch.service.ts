@@ -55,6 +55,32 @@ export class WatchService {
     await this.checkMovieAndSessionExistence(movieId, sessionId);
 
     const { id } = this.getCurrentUser();
+    // Check if user has a ticket for the session
+    const getTicketIfExists = await this.prisma.ticket.findFirst({
+      where: {
+        userId: id,
+        sessionId,
+        isUsed: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (!getTicketIfExists) {
+      throw new UnauthorizedException(
+        'User does not have a ticket for this session',
+      );
+    }
+
+    await this.prisma.ticket.update({
+      where: {
+        id: getTicketIfExists.id,
+      },
+      data: {
+        isUsed: true,
+      },
+    });
+
     return this.prisma.watchHistory.create({
       data: {
         userId: id,
