@@ -8,6 +8,7 @@ import { MovieModule } from '@movie/movie.module';
 import { SessionModule } from '@session/session.module';
 import { TicketModule } from '@ticket/ticket.module';
 import { WatchHistoryModule } from '@/watch-history/watch-history.module';
+import { AppController } from '@/app.controller';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { WatchHistoryModule } from '@/watch-history/watch-history.module';
     TicketModule,
     WatchHistoryModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
