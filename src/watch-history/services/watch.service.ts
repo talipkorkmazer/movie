@@ -5,17 +5,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { PaginationDto } from '@/common/dto/pagination.dto';
-import { PaginatedResult } from '@/common/types/paginated-result';
-import { createPaginator } from '@/common/pagination.helper';
-import { WatchHistoryOutputDto } from '@/watch-history/dto/watch-history-output.dto';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { UserModel } from '@auth/models/auth.model';
+import { WatchHistoryOutputDto } from '@/watch-history/dto/watch-history-output.dto';
 
 @Injectable()
-export class WatchHistoryService {
-  private select = {
+export class WatchService {
+  public select = {
     id: true,
     watchedAt: true,
     User: {
@@ -51,48 +48,21 @@ export class WatchHistoryService {
     @Inject(REQUEST) private readonly request: Request,
   ) {}
 
-  async findAll(
+  async create(
     movieId: string,
     sessionId: string,
-    paginationDto: PaginationDto,
-  ): Promise<PaginatedResult<WatchHistoryOutputDto>> {
-    await this.checkMovieAndSessionExistence(movieId, sessionId);
-
-    const { id } = this.getCurrentUser();
-    const paginate = createPaginator(paginationDto);
-    const select = {
-      where: {
-        sessionId,
-        movieId,
-        userId: id,
-      },
-      select: this.select,
-    };
-
-    return await paginate(this.prisma.watchHistory, select);
-  }
-
-  async find(
-    movieId: string,
-    sessionId: string,
-    ticketId: string,
   ): Promise<WatchHistoryOutputDto> {
     await this.checkMovieAndSessionExistence(movieId, sessionId);
 
     const { id } = this.getCurrentUser();
-    const watchHistory = await this.prisma.watchHistory.findFirst({
-      where: {
-        id: ticketId,
+    return this.prisma.watchHistory.create({
+      data: {
         userId: id,
+        sessionId,
+        movieId,
       },
       select: this.select,
     });
-
-    if (!watchHistory) {
-      throw new NotFoundException('Watch history not found');
-    }
-
-    return watchHistory;
   }
 
   private getCurrentUser() {

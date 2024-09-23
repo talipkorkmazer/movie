@@ -1,20 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WatchHistoryService } from './watch-history.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { PaginationDto } from '@/common/dto/pagination.dto';
-import { createPaginator } from '@/common/pagination.helper';
-import { PaginatedResult } from '@/common/types/paginated-result';
 import { WatchHistoryOutputDto } from '@/watch-history/dto/watch-history-output.dto';
+import { WatchService } from '@watch-history/services/watch.service';
 
 jest.mock('@/common/pagination.helper', () => ({
   createPaginator: jest.fn(() => jest.fn()), // Mock the pagination helper
 }));
 
-describe('WatchHistoryService', () => {
-  let service: WatchHistoryService;
+describe('WatchService', () => {
+  let service: WatchService;
   let prisma: PrismaService;
   let mockRequest: Partial<Request>;
 
@@ -23,7 +20,7 @@ describe('WatchHistoryService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        WatchHistoryService,
+        WatchService,
         {
           provide: PrismaService,
           useValue: {
@@ -46,7 +43,7 @@ describe('WatchHistoryService', () => {
       ],
     }).compile();
 
-    service = module.get<WatchHistoryService>(WatchHistoryService);
+    service = module.get<WatchService>(WatchService);
     prisma = module.get<PrismaService>(PrismaService);
   });
 
@@ -54,79 +51,17 @@ describe('WatchHistoryService', () => {
     jest.clearAllMocks();
   });
 
-  describe('findAll', () => {
-    it('should return a paginated result of watch history for the current user', async () => {
-      const paginationDto: PaginationDto = { page: 1, limit: 10 };
+  describe('create', () => {
+    it('should create and return a new watch history entry', async () => {
       const movieId = '1';
       const sessionId = '1';
       const now = new Date();
-      const paginatedWatchHistory: PaginatedResult<WatchHistoryOutputDto> = {
-        data: [
-          {
-            id: '1',
-            watchedAt: now,
-            Session: {
-              id: 'sessionId',
-              date: now,
-              timeSlot: '10:00-12:00',
-              roomNumber: 1,
-              updatedAt: now,
-              createdAt: now,
-            },
-            Movie: {
-              id: movieId,
-              name: 'Movie 1',
-              ageRestriction: 18,
-              updatedAt: now,
-              createdAt: now,
-            },
-            User: { id: 'userId', username: 'user1', age: 25 },
-          },
-        ],
-        meta: {
-          total: 1,
-          currentPage: 1,
-          perPage: 10,
-          lastPage: 1,
-          next: null,
-          prev: null,
-        },
-      };
-
-      const paginate = jest.fn().mockResolvedValue(paginatedWatchHistory);
-      (createPaginator as jest.Mock).mockReturnValue(paginate);
-
-      // Mock existence checks
-      (prisma.movie.count as jest.Mock).mockResolvedValue(1);
-      (prisma.session.count as jest.Mock).mockResolvedValue(1);
-
-      const result = await service.findAll(movieId, sessionId, paginationDto);
-      expect(result).toEqual(paginatedWatchHistory);
-      expect(prisma.movie.count).toHaveBeenCalledWith({
-        where: { id: movieId },
-      });
-      expect(prisma.session.count).toHaveBeenCalledWith({
-        where: { id: sessionId },
-      });
-      expect(paginate).toHaveBeenCalledWith(
-        prisma.watchHistory,
-        expect.anything(),
-      );
-    });
-  });
-
-  describe('find', () => {
-    it('should return a watch history entry by movie ID, session ID, and ticket ID', async () => {
-      const movieId = '1';
-      const sessionId = '1';
-      const ticketId = '1';
-      const now = new Date();
-      const watchHistory: WatchHistoryOutputDto = {
-        id: ticketId,
+      const createdWatchHistory: WatchHistoryOutputDto = {
+        id: '1',
         watchedAt: now,
         Session: {
           id: sessionId,
-          date: now,
+          date: new Date(),
           timeSlot: '10:00-12:00',
           roomNumber: 1,
           updatedAt: now,
@@ -145,33 +80,14 @@ describe('WatchHistoryService', () => {
       // Mock existence checks
       (prisma.movie.count as jest.Mock).mockResolvedValue(1);
       (prisma.session.count as jest.Mock).mockResolvedValue(1);
-      (prisma.watchHistory.findFirst as jest.Mock).mockResolvedValue(
-        watchHistory,
+      (prisma.watchHistory.create as jest.Mock).mockResolvedValue(
+        createdWatchHistory,
       );
 
-      const result = await service.find(movieId, sessionId, ticketId);
-      expect(result).toEqual(watchHistory);
-      expect(prisma.watchHistory.findFirst).toHaveBeenCalledWith({
-        where: { id: ticketId, userId: 'userId' },
-        select: expect.anything(),
-      });
-    });
-
-    it('should throw NotFoundException if watch history is not found', async () => {
-      const movieId = '1';
-      const sessionId = '1';
-      const ticketId = 'nonexistent-id';
-
-      // Mock existence checks
-      (prisma.movie.count as jest.Mock).mockResolvedValue(1);
-      (prisma.session.count as jest.Mock).mockResolvedValue(1);
-      (prisma.watchHistory.findFirst as jest.Mock).mockResolvedValue(null);
-
-      await expect(service.find(movieId, sessionId, ticketId)).rejects.toThrow(
-        NotFoundException,
-      );
-      expect(prisma.watchHistory.findFirst).toHaveBeenCalledWith({
-        where: { id: ticketId, userId: 'userId' },
+      const result = await service.create(movieId, sessionId);
+      expect(result).toEqual(createdWatchHistory);
+      expect(prisma.watchHistory.create).toHaveBeenCalledWith({
+        data: { userId: 'userId', sessionId, movieId },
         select: expect.anything(),
       });
     });

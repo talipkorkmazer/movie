@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WatchController } from './watch.controller';
-import { WatchHistoryService } from '@/watch-history/services/watch-history.service';
 import { WatchHistoryOutputDto } from '@/watch-history/dto/watch-history-output.dto';
+import { WatchService } from '@watch-history/services/watch.service';
 
 describe('WatchHistoryController', () => {
   let controller: WatchController;
-  let service: WatchHistoryService;
+  let service: WatchService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WatchController],
       providers: [
         {
-          provide: WatchHistoryService,
+          provide: WatchService,
           useValue: {
             create: jest.fn(),
           },
@@ -21,7 +21,7 @@ describe('WatchHistoryController', () => {
     }).compile();
 
     controller = module.get<WatchController>(WatchController);
-    service = module.get<WatchHistoryService>(WatchHistoryService);
+    service = module.get<WatchService>(WatchService);
   });
 
   afterEach(() => {

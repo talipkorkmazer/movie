@@ -8,10 +8,10 @@ import {
 import { ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators/api-response.decorator';
 import { LoginUnauthorizedResponseType } from '@auth/types/login-unauthorized-response.type';
 import { Permission } from '@permission/decorators/permissions.decorator';
-import { WatchHistoryService } from '@/watch-history/services/watch-history.service';
 import { WatchHistoryOutputDto } from '@/watch-history/dto/watch-history-output.dto';
 import { SessionNotfoundResponseType } from '@session/types/session-notfound-response.type';
 import { MovieNotfoundResponseType } from '@movie/types/movie-notfound-response.type';
+import { WatchService } from '@watch-history/services/watch.service';
 
 @ApiTags('Watch Histories')
 @ApiUnauthorizedResponse({
@@ -21,7 +21,7 @@ import { MovieNotfoundResponseType } from '@movie/types/movie-notfound-response.
 })
 @Controller('movies/:movieId/sessions/:sessionId/watch')
 export class WatchController {
-  constructor(private readonly watchHistoryService: WatchHistoryService) {}
+  constructor(private readonly watchService: WatchService) {}
 
   @ApiOperation({ summary: 'Watch a movie' })
   @ApiOkResponse({ type: WatchHistoryOutputDto })
@@ -41,6 +41,6 @@ export class WatchController {
     @Param('movieId') movieId: string,
     @Param('sessionId') sessionId: string,
   ): Promise<WatchHistoryOutputDto> {
-    return this.watchHistoryService.create(movieId, sessionId);
+    return this.watchService.create(movieId, sessionId);
   }
 }
