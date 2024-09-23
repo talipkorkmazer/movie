@@ -28,11 +28,17 @@ jobs:
       - name: Run Migrations
         run: |
           heroku run "npx prisma deploy" --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
       - name: Run Seeds
         run: |
           heroku run "npx prisma db seed" --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
 
       - name: Release Docker image
         run: |
           heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
