@@ -7,12 +7,12 @@ import { PermissionModule } from '@permission/permission.module';
 import { MovieModule } from '@movie/movie.module';
 import { SessionModule } from '@session/session.module';
 import { TicketModule } from '@ticket/ticket.module';
-import { WatchHistoryModule } from '@watch-history/watch-history.module';
+import { WatchHistoryModule } from '@/watch-history/watch-history.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      cache: true,
+      envFilePath: `.env.${process.env.NODE_ENV || 'local'}`,
       isGlobal: true,
     }),
     PrismaModule,

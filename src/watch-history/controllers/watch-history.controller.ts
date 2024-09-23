@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -30,7 +23,7 @@ import { WatchHistoryNotfoundResponseType } from '@/watch-history/types/watch-hi
   description: 'Unauthorized',
   type: LoginUnauthorizedResponseType,
 })
-@Controller('movies/:movieId/sessions/:sessionId/watch')
+@Controller('watch-history')
 export class WatchHistoryController {
   constructor(private readonly watchHistoryService: WatchHistoryService) {}
 
@@ -81,26 +74,5 @@ export class WatchHistoryController {
     @Param('watchHistoryId') watchHistoryId: string,
   ): Promise<WatchHistoryOutputDto> {
     return this.watchHistoryService.find(movieId, sessionId, watchHistoryId);
-  }
-
-  @ApiOperation({ summary: 'Watch a movie' })
-  @ApiOkResponse({ type: WatchHistoryOutputDto })
-  @ApiNotFoundResponse({
-    description: 'Session not found',
-    type: SessionNotfoundResponseType,
-    status: HttpStatus.NOT_FOUND,
-  })
-  @ApiNotFoundResponse({
-    description: 'Movie not found',
-    type: MovieNotfoundResponseType,
-    status: HttpStatus.NOT_FOUND,
-  })
-  @Post()
-  @Permission('create:watch-history')
-  create(
-    @Param('movieId') movieId: string,
-    @Param('sessionId') sessionId: string,
-  ): Promise<WatchHistoryOutputDto> {
-    return this.watchHistoryService.create(movieId, sessionId);
   }
 }

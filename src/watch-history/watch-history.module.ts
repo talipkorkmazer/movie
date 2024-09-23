@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { WatchHistoryService } from './services/watch-history.service';
-import { WatchHistoryController } from './controllers/watch-history.controller';
+import { WatchController } from './controllers/watch.controller';
+import { WatchHistoryController } from '@watch-history/controllers/watch-history.controller';
 
 @Module({
   providers: [WatchHistoryService],
-  controllers: [WatchHistoryController]
+  controllers: [WatchController, WatchHistoryController],
 })
 export class WatchHistoryModule {}

@@ -5,5 +5,16 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "setupFiles": ["dotenv/config"],
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/../src/$1",
+    "^@auth/(.*)$": "<rootDir>/../src/auth/$1",
+    "^@movie/(.*)$": "<rootDir>/../src/movie/$1",
+    "^@permission/(.*)$": "<rootDir>/../src/permission/$1",
+    "^@role/(.*)$": "<rootDir>/../src/role/$1",
+    "^@session/(.*)$": "<rootDir>/../src/session/$1",
+    "^@ticket/(.*)$": "<rootDir>/../src/ticket/$1",
+    "^@watch-history/(.*)$": "<rootDir>/../src/watch-history/$1"
   }
 }
