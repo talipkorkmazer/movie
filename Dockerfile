@@ -11,9 +11,9 @@ RUN npm install cpx
 
 #RUN npx prisma migrate deploy
 RUN npx prisma generate
-RUN npx prisma migrate deploy
-RUN npx prisma db seed # Just for the testing purposes
 RUN npm run build
 RUN npm rebuild
+RUN npx prisma migrate deploy
+RUN npx prisma db seed # Just for the testing purposes
 
 CMD ["node","/app/dist/src/main.js"]
