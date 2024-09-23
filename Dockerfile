@@ -10,7 +10,7 @@ RUN npm ci --omit=dev --ignore-scripts
 RUN npm install cpx
 
 #RUN npx prisma migrate deploy
-RUN npm run prisma:generate
+RUN npx prisma generate
 RUN npm run build
 RUN npm rebuild
 
