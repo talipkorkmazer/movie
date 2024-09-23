@@ -34,6 +34,7 @@ describe('WatchService', () => {
             session: {
               count: jest.fn(),
             },
+            ticket: { findFirst: jest.fn(), update: jest.fn() },
           },
         },
         {
@@ -56,6 +57,7 @@ describe('WatchService', () => {
       const movieId = '1';
       const sessionId = '1';
       const now = new Date();
+
       const createdWatchHistory: WatchHistoryOutputDto = {
         id: '1',
         watchedAt: now,
@@ -78,18 +80,95 @@ describe('WatchService', () => {
       };
 
       // Mock existence checks
-      (prisma.movie.count as jest.Mock).mockResolvedValue(1);
-      (prisma.session.count as jest.Mock).mockResolvedValue(1);
+      (prisma.movie.count as jest.Mock).mockResolvedValue(1); // Movie exists
+      (prisma.session.count as jest.Mock).mockResolvedValue(1); // Session exists
+
+      // Mock that the user has a valid ticket
+      (prisma.ticket.findFirst as jest.Mock).mockResolvedValue({
+        id: 'ticketId',
+      });
+
+      // Mock ticket update (mark ticket as used)
+      (prisma.ticket.update as jest.Mock).mockResolvedValue({
+        id: 'ticketId',
+        isUsed: true,
+      });
+
+      // Mock watch history creation
       (prisma.watchHistory.create as jest.Mock).mockResolvedValue(
         createdWatchHistory,
       );
 
+      // Act
       const result = await service.create(movieId, sessionId);
-      expect(result).toEqual(createdWatchHistory);
+
+      // Assert
+      expect(prisma.movie.count).toHaveBeenCalledWith({
+        where: { id: movieId },
+      });
+      expect(prisma.session.count).toHaveBeenCalledWith({
+        where: { id: sessionId },
+      });
+      expect(prisma.ticket.findFirst).toHaveBeenCalledWith({
+        where: {
+          userId: 'userId',
+          sessionId,
+          isUsed: false,
+        },
+        select: {
+          id: true,
+        },
+      });
+      expect(prisma.ticket.update).toHaveBeenCalledWith({
+        where: { id: 'ticketId' },
+        data: { isUsed: true },
+      });
       expect(prisma.watchHistory.create).toHaveBeenCalledWith({
         data: { userId: 'userId', sessionId, movieId },
-        select: expect.anything(),
+        select: service.select,
       });
+
+      expect(result).toEqual(createdWatchHistory);
+    });
+
+    it('should throw UnauthorizedException if the user does not have a valid ticket', async () => {
+      const movieId = '1';
+      const sessionId = '1';
+
+      // Mock existence checks
+      (prisma.movie.count as jest.Mock).mockResolvedValue(1); // Movie exists
+      (prisma.session.count as jest.Mock).mockResolvedValue(1); // Session exists
+
+      // Mock that no valid ticket exists for the user
+      (prisma.ticket.findFirst as jest.Mock).mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(service.create(movieId, sessionId)).rejects.toThrow(
+        UnauthorizedException,
+      );
+
+      // Ensure ticket update and watchHistory create were never called
+      expect(prisma.ticket.update).not.toHaveBeenCalled();
+      expect(prisma.watchHistory.create).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if movie or session does not exist', async () => {
+      const movieId = '1';
+      const sessionId = '1';
+
+      // Mock movie not existing
+      (prisma.movie.count as jest.Mock).mockResolvedValue(0);
+
+      // Act & Assert
+      await expect(service.create(movieId, sessionId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      // Ensure session count, ticket find, ticket update, and watchHistory create were never called
+      expect(prisma.session.count).not.toHaveBeenCalled();
+      expect(prisma.ticket.findFirst).not.toHaveBeenCalled();
+      expect(prisma.ticket.update).not.toHaveBeenCalled();
+      expect(prisma.watchHistory.create).not.toHaveBeenCalled();
     });
   });
 
