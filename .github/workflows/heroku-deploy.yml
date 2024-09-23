@@ -25,4 +25,3 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "talip-movie"
           heroku_email: "talp17@gmail.com"
-          usedocker: true
