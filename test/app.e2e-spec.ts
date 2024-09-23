@@ -39,7 +39,6 @@ describe('Movie Management System (e2e)', () => {
   };
 
   beforeAll(async () => {
-    console.log({ env: process.env.NODE_ENV });
     execSync('npx prisma migrate deploy --schema=prisma/schema.prisma', {
       env: {
         ...process.env, // Spread the current process environment
